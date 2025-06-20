@@ -1,0 +1,4 @@
+- Prefer the `src/` layout and manage packages with `pyproject.toml` using `setuptools`.
+- Include dependencies explicitly and keep functions modular and readable.
+- Use `pytest` for tests located in the `tests/` directory.
+- Avoid insecure uses of `eval`; prefer safe evaluation methods or sandboxes.
