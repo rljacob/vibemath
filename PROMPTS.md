@@ -23,6 +23,7 @@ I want to build a Python web app using modern best practices. Please follow thes
 - Set up basic CI (e.g., GitHub Actions or `tox`) to run tests automatically
 - Optionally configure formatting tools (e.g., `black`, `isort`)
 - Use `conda` for environment and dependency management instead of `venv`
+- Do not start building any functionality inside the package on this prompt.
 ```
 
 ### Prompt 0a — Test the Best Practices Setup
