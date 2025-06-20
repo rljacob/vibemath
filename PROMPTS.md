@@ -23,108 +23,58 @@ I want to build a Python web app using modern best practices. Please follow thes
 - Set up basic CI (e.g., GitHub Actions or `tox`) to run tests automatically
 - Optionally configure formatting tools (e.g., `black`, `isort`)
 - Use `conda` for environment and dependency management instead of `venv`
-- Update `.cursorrules` based on this guidelines.
+- Install `pre-commit` and set up `.pre-commit-config.yaml` to run: `ruff`, `black`, `isort`, `flake8`, `pytest`
+- Update `.cursorrules` based on this guideline.
 - Do not start building any functionality inside the package on this prompt.
+- Avoid creating unnecessary files and folders (e.g., Makefiles, scripts, notebooks) unless strictly needed later.
+- Avoid creating scaffolding folders inside the package until necessary.
 ```
 
 ### Prompt 0a — Test the Best Practices Setup
 
 ```
-Verify the package follows Python best practices by checking the following:
+Verify that the MathViber package is properly scaffolded:
 
-1. The folder structure includes:
-
-    MathViber/
-    ├── .gitignore
-    ├── LICENSE
-    ├── README.md
-    ├── environment.yml
-    ├── pyproject.toml
-    ├── src/
-    │   └── mathviber/
-    │       ├── __init__.py
-    │       ├── __version__.py
-    │       ├── ...
-    │   └── tests/
-    │       └── test_example.py
-
-2. `environment.yml` contains dependencies like python=3.12, flask, numpy, matplotlib, pytest, black, isort, flake8, ruff
-
-3. `pyproject.toml` includes:
-   - project name "MathViber"
-   - version, authors, dependencies
-   - `[project.scripts]` section if CLI is used
-
-4. Run:
-    conda env create -f environment.yml
-    conda activate mathviber
-    pip install -e .
-
-5. Linting/formatting checks:
-    ruff src/
-    flake8 src/
-    black --check src/
-
-6. Tests:
-    pytest src/
-
-7. Confirm:
-   - LICENSE is valid
-   - CI file exists or tox.ini is configured
+- Check that the project has `README.md`, `LICENSE`, `environment.yml`, `.gitignore`, and `pyproject.toml`
+- Confirm `src/mathviber/` exists with `__init__.py` and `__version__.py`
+- Ensure `src/tests/` exists with one example test
+- Check Python version is 3.12 and required dependencies are in `environment.yml`
+- Run `conda env create -f environment.yml` and `pip install -e .`
+- Run `pre-commit run --all-files`
 ```
 
----
-
-### Prompt 1 — Create Modern Python Package
+### Prompt 1 — Scaffold Package and Add Homepage
 
 ```
-Create a modern Python package using a `src/` layout. Name the package `hello_webpage`. Set it up with `pyproject.toml` using `setuptools` as the build backend. I want to build a simple Flask web app.
+Check if the minimal Flask app defines a homepage that can be tested.
 
-Include:
-- `pyproject.toml` with correct metadata (name, version, authors, dependencies)
-- `src/hello_webpage/__init__.py`
-- `README.md`
-- `LICENSE`
-- `environment.yml`
-- `.gitignore`
-
-Add a test:
-- `src/tests/test_structure.py` to assert package import works and metadata exists
-```
-
----
-
-### Prompt 2 — Add Flask App with Homepage
-
-```
-Inside `src/hello_webpage/web.py`, create a Flask app with a single route `/` that returns "Hello, World!".
-
-Define:
+The app needs to have defined:
 - `create_app()` to build and return the Flask app
-- `main()` to call `create_app().run()`
+- A route `/` that returns "Hello, World!"
+- `main()` that runs the app
 
-Add a test:
-- `src/tests/test_web_home.py` to verify the route `/` returns HTTP 200 and "Hello, World!" in response
+Tests:
+- `src/tests/test_structure.py`: check import and metadata presence
+- `src/tests/test_app_home.py`: check `/` returns HTTP 200 and contains "Hello, World!"
+- Correct entry on `pyproject.toml` for the CLI. 
+- `src/tests/test_cli.py`: confirm `main()` runs without errors and returns a Flask app
 ```
 
----
-
-### Prompt 3 — Add CLI Script Entry Point
+### Prompt 1a — Check That It Works
 
 ```
-Update the `pyproject.toml` to include a CLI script called `hello-web` that points to `hello_webpage.web:main`.
+Run the following to validate setup and functionality:
 
-Example entry:
-[project.scripts]
-hello-web = "hello_webpage.web:main"
+1. Create and activate environment
+2. Install package
+3. Run app
+4. Test and lint
 
-Add a test:
-- `src/tests/test_cli.py` to confirm that running `hello_webpage.web.main()` does not raise and returns a Flask app instance
+Ensure all tests pass and app is accessible at http://127.0.0.1:5000/ with "Hello, World!"
 ```
 
----
 
-### Prompt 4 — Add HTML Input Box and Display Value
+### Prompt 2 — Add HTML Input Box and Display Value
 
 ```
 Update the Flask app to render an HTML page with:
@@ -135,35 +85,35 @@ Update the Flask app to render an HTML page with:
 Use a basic HTML template and handle the form in the Flask route.
 ```
 
----
 
-### Prompt 5 — Accept Math Expression and Plot
+### Prompt 3 — Accept Math Expression and Plot
 
 ```
 Update the Flask app to:
 - Accept a text input like `sin(x)` or `x**2`
+- Check if the input is a valid mathematical formula
+- Keep the input on the text input when the button is pressed
+- Add an example text to the text input
 - Use `numpy` and `matplotlib` to evaluate and plot `y = f(x)` from x = -10 to 10
 - Save the plot to a temporary image file and show it on the webpage after submission
-
-Use `eval` carefully or `numexpr` if needed. Handle simple math functions like sin, cos, log, exp.
+- Add a button to download the plot
 ```
 
----
 
-### Prompt 6 — Add a Test for Input and Plot Route
-
-```
-Add a test to confirm that the plot route returns 200 and includes a base64 image in response when valid math is submitted.
-```
-
----
-
-### Prompt 7 — Add Dev Tools
+### Prompt 4 — Customization
 
 ```
-Add `pytest` as a dev dependency. Also update `pyproject.toml` to configure pytest to look for tests in the `src/` folder.
+- Add inputs for x_max, x_min, y_max, y_man
+- Add checkbox for x_log, y_log
+- Add input names for the graph, x_name, y_name
+- Prepopulate the inputs
+- Add a button to plot the graph again
 ```
 
----
+### Prompt 5 — Interactive plots!
 
-Use this sequence to guide yourself or an AI IDE like Cursor from start to finish while learning good structure, safety, and real-world functionality.
+```
+- Make the plot interactive by using plotly
+- Make sure the graph updates when new values are added on the input boxes
+- Make sure the download button is still working
+```
