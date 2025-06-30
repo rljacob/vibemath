@@ -56,7 +56,7 @@ The app needs to have defined:
 Tests:
 - `src/tests/test_structure.py`: check import and metadata presence
 - `src/tests/test_app_home.py`: check `/` returns HTTP 200 and contains "Hello, World!"
-- Correct entry on `pyproject.toml` for the CLI. 
+- Correct entry on `pyproject.toml` for the CLI.
 - `src/tests/test_cli.py`: confirm `main()` runs without errors and returns a Flask app
 ```
 

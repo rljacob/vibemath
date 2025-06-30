@@ -1,4 +1,54 @@
-- Prefer the `src/` layout and manage packages with `pyproject.toml` using `setuptools`.
-- Include dependencies explicitly and keep functions modular and readable.
-- Use `pytest` for tests located in the `tests/` directory.
-- Avoid insecure uses of `eval`; prefer safe evaluation methods or sandboxes.
+# MathViber Development Rules
+
+## Project Structure
+- Use the `src/` layout for the MathViber package
+- Manage packages with `pyproject.toml` using `setuptools` and PEP 621
+- Place tests inside `src/tests/` directory using `pytest`
+- Use Python 3.12 as the target version
+
+## Code Quality
+- Include all dependencies explicitly in `pyproject.toml`
+- Keep functions modular, readable, and well-documented
+- Use type hints throughout the codebase (`typing` module)
+- Follow PEP 8 style guidelines with 88-character line length
+- Use meaningful variable and function names
+
+## Safety and Security
+- Avoid insecure uses of `eval`; prefer safe evaluation methods or sandboxes
+- Validate all user inputs, especially mathematical expressions
+- Use secure coding practices for web applications
+
+## Development Tools
+- Use `ruff` for fast linting and code formatting
+- Use `black` for code formatting (88-character line length)
+- Use `isort` for import sorting (black profile)
+- Use `flake8` for additional linting
+- Use `mypy` for static type checking with strict mode
+- Use `pre-commit` hooks for automated code quality checks
+
+## Testing
+- Write comprehensive tests using `pytest`
+- Aim for >80% code coverage
+- Include unit tests, integration tests, and edge cases
+- Test both success and failure scenarios
+- Mock external dependencies when appropriate
+
+## Dependencies
+- Use `conda` for environment management
+- Pin major versions but allow minor/patch updates
+- Separate development dependencies from runtime dependencies
+- Keep dependencies minimal and well-justified
+
+## Documentation
+- Use docstrings for all public functions and classes
+- Follow Google or NumPy docstring conventions
+- Include type information in docstrings
+- Provide usage examples where helpful
+- Keep README.md updated with current usage instructions
+
+## Web Development (Flask)
+- Use Flask for the web framework
+- Implement proper error handling and logging
+- Use templates for HTML rendering
+- Implement proper security headers
+- Follow RESTful API design principles where applicable

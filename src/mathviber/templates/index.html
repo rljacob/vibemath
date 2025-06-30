@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathViber - Mathematical Expression Visualizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .half-width {
+            flex: 1;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-top: 25px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            margin-bottom: 0;
+        }
+        .checkbox-label input[type="checkbox"] {
+            margin-right: 8px;
+            width: auto;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input[type="number"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .primary-btn, .secondary-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .primary-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .primary-btn:hover {
+            background-color: #45a049;
+        }
+        .secondary-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+        .secondary-btn:hover {
+            background-color: #1976D2;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+            border-radius: 5px;
+        }
+        .result h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .result p {
+            margin: 0;
+            font-size: 18px;
+            color: #555;
+        }
+        .error {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #ffebee;
+            border-left: 4px solid #f44336;
+            border-radius: 5px;
+        }
+        .error h3 {
+            margin-top: 0;
+            color: #c62828;
+        }
+        .error p {
+            margin: 0;
+            font-size: 16px;
+            color: #c62828;
+        }
+        .plot-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .plot-image {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .plot-actions {
+            margin-top: 15px;
+        }
+        .download-btn {
+            display: inline-block;
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .download-btn:hover {
+            background-color: #1976D2;
+        }
+        .updating {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .update-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MathViber</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+            Mathematical Expression Visualizer
+        </p>
+
+        <form method="POST" action="/">
+            <div class="form-group">
+                <label for="user_input">Enter a mathematical expression:</label>
+                <input type="text" id="user_input" name="user_input"
+                       placeholder="Examples: sin(x), x**2, cos(x) + x, exp(-x**2)"
+                       value="{{ request.form.user_input if request.form.user_input else '' }}"
+                       required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half-width">
+                    <label for="x_min">X Min:</label>
+                    <input type="number" id="x_min" name="x_min" step="any"
+                           value="{{ request.form.x_min if request.form.x_min else '-10' }}">
+                </div>
+                <div class="form-group half-width">
+                    <label for="x_max">X Max:</label>
+                    <input type="number" id="x_max" name="x_max" step="any"
+                           value="{{ request.form.x_max if request.form.x_max else '10' }}">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half-width">
+                    <label for="y_min">Y Min (optional):</label>
+                    <input type="number" id="y_min" name="y_min" step="any"
+                           value="{{ request.form.y_min if request.form.y_min else '' }}"
+                           placeholder="Auto">
+                </div>
+                <div class="form-group half-width">
+                    <label for="y_max">Y Max (optional):</label>
+                    <input type="number" id="y_max" name="y_max" step="any"
+                           value="{{ request.form.y_max if request.form.y_max else '' }}"
+                           placeholder="Auto">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half-width">
+                    <label for="x_name">X-axis Label:</label>
+                    <input type="text" id="x_name" name="x_name"
+                           value="{{ request.form.x_name if request.form.x_name else 'x' }}"
+                           placeholder="x">
+                </div>
+                <div class="form-group half-width">
+                    <label for="y_name">Y-axis Label:</label>
+                    <input type="text" id="y_name" name="y_name"
+                           value="{{ request.form.y_name if request.form.y_name else 'y' }}"
+                           placeholder="y">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group half-width">
+                    <label for="graph_title">Graph Title:</label>
+                    <input type="text" id="graph_title" name="graph_title"
+                           value="{{ request.form.graph_title if request.form.graph_title else '' }}"
+                           placeholder="Auto (y = expression)">
+                </div>
+                <div class="form-group half-width checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="x_log" name="x_log" value="true"
+                               {{ 'checked' if request.form.x_log else '' }}>
+                        X-axis Log Scale
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="y_log" name="y_log" value="true"
+                               {{ 'checked' if request.form.y_log else '' }}>
+                        Y-axis Log Scale
+                    </label>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" name="action" value="plot" class="primary-btn">Plot Function</button>
+                {% if submitted_text %}
+                <button type="submit" name="action" value="replot" class="secondary-btn">Replot with New Settings</button>
+                {% endif %}
+            </div>
+        </form>
+
+        {% if error_message %}
+        <div class="error">
+            <h3>Error:</h3>
+            <p>{{ error_message }}</p>
+        </div>
+        {% endif %}
+
+        {% if submitted_text %}
+        <div class="result">
+            <h3>Function: y = {{ submitted_text }}</h3>
+            {% if plot_html %}
+            <div class="plot-container">
+                <div id="interactive-plot-container">
+                    {{ plot_html|safe }}
+                </div>
+                <div class="plot-actions">
+                    {% if plot_filename %}
+                    <a href="{{ url_for('download_plot', filename=plot_filename) }}" class="download-btn">Download Plot</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Real-time update container -->
+        <div id="realtime-plot-container" style="display: none;">
+            <div class="result">
+                <h3 id="realtime-function-title">Function: y = </h3>
+                <div class="plot-container">
+                    <div id="realtime-plot"></div>
+                    <div class="plot-actions">
+                        <a id="realtime-download-btn" href="#" class="download-btn" style="display: none;">Download Plot</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update indicator -->
+    <div id="update-indicator" class="update-indicator">Updating plot...</div>
+
+    <script>
+        let updateTimeout;
+        let lastPlotData = null;
+
+        // Function to collect current form data
+        function getFormData() {
+            return {
+                expression: document.getElementById('user_input').value.trim(),
+                x_min: document.getElementById('x_min').value,
+                x_max: document.getElementById('x_max').value,
+                y_min: document.getElementById('y_min').value,
+                y_max: document.getElementById('y_max').value,
+                x_name: document.getElementById('x_name').value,
+                y_name: document.getElementById('y_name').value,
+                graph_title: document.getElementById('graph_title').value,
+                x_log: document.getElementById('x_log').checked,
+                y_log: document.getElementById('y_log').checked
+            };
+        }
+
+        // Function to check if form data has changed
+        function hasFormDataChanged(newData) {
+            if (!lastPlotData) return true;
+            return JSON.stringify(newData) !== JSON.stringify(lastPlotData);
+        }
+
+        // Function to update plot via AJAX
+        function updatePlot() {
+            const formData = getFormData();
+
+            // Don't update if expression is empty
+            if (!formData.expression) {
+                document.getElementById('realtime-plot-container').style.display = 'none';
+                return;
+            }
+
+            // Don't update if data hasn't changed
+            if (!hasFormDataChanged(formData)) {
+                return;
+            }
+
+            // Show loading indicator
+            document.getElementById('update-indicator').style.display = 'block';
+            document.getElementById('realtime-plot-container').classList.add('updating');
+
+            // Make AJAX request
+            fetch('/api/update_plot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide loading indicator
+                document.getElementById('update-indicator').style.display = 'none';
+                document.getElementById('realtime-plot-container').classList.remove('updating');
+
+                if (data.success) {
+                    // Update plot
+                    document.getElementById('realtime-plot').innerHTML = data.plot_html;
+                    document.getElementById('realtime-function-title').textContent = 'Function: y = ' + formData.expression;
+
+                    // Update download link
+                    if (data.plot_filename) {
+                        const downloadBtn = document.getElementById('realtime-download-btn');
+                        downloadBtn.href = '/download/' + data.plot_filename;
+                        downloadBtn.style.display = 'inline-block';
+                    }
+
+                    // Show plot container
+                    document.getElementById('realtime-plot-container').style.display = 'block';
+
+                    // Store current data
+                    lastPlotData = {...formData};
+                } else {
+                    // Show error (could be enhanced with better error display)
+                    console.error('Plot update error:', data.error);
+                    // Hide plot container on error
+                    document.getElementById('realtime-plot-container').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Network error:', error);
+                document.getElementById('update-indicator').style.display = 'none';
+                document.getElementById('realtime-plot-container').classList.remove('updating');
+                document.getElementById('realtime-plot-container').style.display = 'none';
+            });
+        }
+
+        // Debounced update function
+        function debouncedUpdate() {
+            clearTimeout(updateTimeout);
+            updateTimeout = setTimeout(updatePlot, 500); // 500ms delay
+        }
+
+        // Add event listeners to all form inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = [
+                'user_input', 'x_min', 'x_max', 'y_min', 'y_max',
+                'x_name', 'y_name', 'graph_title', 'x_log', 'y_log'
+            ];
+
+            inputs.forEach(inputId => {
+                const element = document.getElementById(inputId);
+                if (element) {
+                    if (element.type === 'checkbox') {
+                        element.addEventListener('change', debouncedUpdate);
+                    } else {
+                        element.addEventListener('input', debouncedUpdate);
+                        element.addEventListener('change', debouncedUpdate);
+                    }
+                }
+            });
+
+            // If there's already a plot on page load, trigger initial update
+            const expression = document.getElementById('user_input').value.trim();
+            if (expression) {
+                setTimeout(updatePlot, 100); // Small delay to ensure page is fully loaded
+            }
+        });
+
+        // Handle form submission to prevent conflicts with real-time updates
+        document.querySelector('form').addEventListener('submit', function(e) {
+            // Clear any pending updates
+            clearTimeout(updateTimeout);
+
+            // Hide real-time plot container since we're doing a full page update
+            document.getElementById('realtime-plot-container').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

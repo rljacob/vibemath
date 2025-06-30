@@ -1,52 +1,145 @@
-# MathViber 
+# MathViber
 
-This repository serves as the starting template for students in the vibe coding class. It contains a short guide of prompts to follow when building a small Flask-based Python package using modern best practices.
+A modern Python web application for mathematical expression visualization using Flask, NumPy, and Matplotlib.
 
-By the end of this project, you will have developed a modern Python package named `MathViber` that is capable of:
-- Serving a web-based interface using Flask
-- Accepting user input for a mathematical expression y = f(x)
-- Parsing and plotting the expression over a defined x-range using NumPy and Matplotlib
-- Following Python packaging best practices including project structure, dependency management, type checking, linting, CLI setup, and testing
+## Features
 
-This project demonstrates how to design, build, test, and interact with a real Python package that meets professional standards and is easily extendable for future use.
+- Web-based interface for mathematical expression input
+- Real-time plotting of mathematical functions
+- Safe expression evaluation with proper input validation
+- Modern Python packaging with `src/` layout
+- Comprehensive testing and CI/CD pipeline
+- Type hints and static analysis
+- CLI interface for easy deployment
 
-This guide is part of a hands-on class aimed at teaching how to `vibe` code a  modern Python package that powers a web application. The goal is to give you practical experience with project structure, testing, packaging, and safe web interactivity using Flask and plotting libraries.
+## Installation
 
-You will define a Python package that serves a "Hello, World" page, accepts user input for mathematical functions, and dynamically plots results using Matplotlib and NumPy.
+### Using Conda (Recommended)
 
-To use this guide on your operating system:
-- **Windows**: Install [Miniconda](https://docs.conda.io/en/latest/miniconda.html), open Anaconda Prompt or Windows Terminal, then run the `conda` commands as shown.
-- **Linux/macOS**: Use Terminal, install Miniconda or Anaconda, and follow the same `conda` instructions.
-
-Make sure to activate your environment with `conda activate mathviber` before running or testing any code.
-
----
-
-### Notes for Using Cursor
-
-If you're using [Cursor](https://www.cursor.so):
-
-- Open this `PROMPTS.md` file and **only uncomment or copy/paste one prompt at a time**.
-- Cursor processes the entire file at once, so avoid having multiple active prompts.
-- Alternatively, split each prompt into its own Markdown file under a `/prompts/` folder.
-- You can paste prompts directly into Cursor's chat input or click to insert them into your current Python file.
-
-#### Basic Cursor Commands
-
-These prompts are compatible with Cursor's command system. For example:
-
-```cursor
-Create a Flask app with a / route that returns 'Hello, World!'
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/mathviber.git
+cd mathviber
 ```
 
-```cursor
-Generate a test using pytest for the / route of the Flask app.
+2. Create and activate the conda environment:
+```bash
+conda env create -f environment.yml
+conda activate mathviber
 ```
 
-```cursor
-Update pyproject.toml to define a CLI script called hello-web
+3. Install the package in development mode:
+```bash
+pip install -e ".[dev]"
 ```
 
-Be as specific as possible in your prompt to Cursor. Use clear filenames, functions, and requirements to guide the model.
+### Using pip
 
-In addition to the prompts, a `.cursorrules` file is included to configure Cursor with Python best practices.
+```bash
+pip install mathviber
+```
+
+## Usage
+
+### Command Line Interface
+
+Start the web application:
+```bash
+mathviber
+```
+
+With custom settings:
+```bash
+mathviber --host 0.0.0.0 --port 8080 --debug
+```
+
+### Python API
+
+```python
+from mathviber import __version__
+print(f"MathViber version: {__version__}")
+```
+
+## Development
+
+### Setting up the Development Environment
+
+1. Install development dependencies:
+```bash
+pip install -e ".[dev]"
+```
+
+2. Install pre-commit hooks:
+```bash
+pre-commit install
+```
+
+3. Run tests:
+```bash
+pytest
+```
+
+4. Run linting and formatting:
+```bash
+ruff check .
+black .
+isort .
+flake8 .
+mypy src/mathviber/
+```
+
+### Project Structure
+
+```
+mathviber/
+├── src/
+│   ├── mathviber/
+│   │   ├── __init__.py
+│   │   ├── _version.py
+│   │   ├── cli.py
+│   │   └── py.typed
+│   └── tests/
+│       ├── __init__.py
+│       ├── test_version.py
+│       └── test_cli.py
+├── pyproject.toml
+├── environment.yml
+├── .pre-commit-config.yaml
+├── .github/workflows/ci.yml
+└── README.md
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=mathviber
+
+# Run specific test file
+pytest src/tests/test_version.py
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Run tests and linting
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Requirements
+
+- Python 3.12+
+- Flask 3.0+
+- NumPy 1.24+
+- Matplotlib 3.7+
+- SymPy 1.12+
