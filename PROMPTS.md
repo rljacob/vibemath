@@ -24,7 +24,7 @@ I want to build a Python web app using modern best practices. Please follow thes
 - Optionally configure formatting tools (e.g., `black`, `isort`)
 - Use `conda` for environment and dependency management instead of `venv`
 - Install `pre-commit` and set up `.pre-commit-config.yaml` to run: `ruff`, `black`, `isort`, `flake8`, `pytest`
-- Update `.cursorrules` based on this guideline.
+- Update `.cursorrules` based on this guidelines and python best practices.
 - Do not start building any functionality inside the package on this prompt.
 - Avoid creating unnecessary files and folders (e.g., Makefiles, scripts, notebooks) unless strictly needed later.
 - Avoid creating scaffolding folders inside the package until necessary.
